@@ -90,36 +90,35 @@
       };
 
       const renderSubMenu = () => {
-        function travel(_route: RouteRecordRaw[], nodes = []) {
-          if (_route) {
-            _route.forEach((element) => {
-              // This is demo, modify nodes as needed
-              const icon = element?.meta?.icon
-                ? () => h(compile(`<${element?.meta?.icon}/>`))
-                : null;
-              const node =
-                element?.children && element?.children.length !== 0 ? (
-                  <a-sub-menu
-                    key={element?.name}
-                    v-slots={{
-                      icon,
-                      title: () => h(compile(t(element?.meta?.locale || ''))),
-                    }}
-                  >
-                    {travel(element?.children)}
-                  </a-sub-menu>
-                ) : (
-                  <a-menu-item
-                    key={element?.name}
-                    v-slots={{ icon }}
-                    onClick={() => goto(element)}
-                  >
-                    {t(element?.meta?.locale || '')}
-                  </a-menu-item>
-                );
-              nodes.push(node as never);
-            });
-          }
+        function travel(_route?: any[], nodes: any[] = []) {
+          if (!_route) return nodes;
+          
+          _route.forEach((element: any) => {
+            // This is demo, modify nodes as needed
+            const icon = element?.meta?.icon
+              ? () => h(compile(`<${element?.meta?.icon}/>`))
+              : null;
+            const node = element?.children && Array.isArray(element.children) && element.children.length !== 0 ? (
+              <a-sub-menu
+                key={element?.name}
+                v-slots={{
+                  icon,
+                  title: () => h(compile(t(element?.meta?.locale || ''))),
+                }}
+              >
+                {travel(element.children)}
+              </a-sub-menu>
+            ) : (
+              <a-menu-item
+                key={element?.name}
+                v-slots={{ icon }}
+                onClick={() => goto(element)}
+              >
+                {t(element?.meta?.locale || '')}
+              </a-menu-item>
+            );
+            nodes.push(node as never);
+          });
           return nodes;
         }
         return travel(menuTree.value);

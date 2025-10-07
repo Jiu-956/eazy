@@ -10,10 +10,10 @@
     </template>
     <a-row :gutter="8">
       <a-col v-for="link in links" :key="link.text" :span="8" class="wrapper">
-        <div class="icon">
+        <div class="icon" @click="handleClick(link.route)">
           <component :is="link.icon" />
         </div>
-        <a-typography-paragraph class="text">
+        <a-typography-paragraph class="text" @click="handleClick(link.route)">
           {{ $t(link.text) }}
         </a-typography-paragraph>
       </a-col>
@@ -23,13 +23,23 @@
 </template>
 
 <script lang="ts" setup>
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
+
   const links = [
-    { text: 'workplace.contentManagement', icon: 'icon-file' },
-    { text: 'workplace.contentStatistical', icon: 'icon-storage' },
-    { text: 'workplace.advanced', icon: 'icon-settings' },
-    { text: 'workplace.onlinePromotion', icon: 'icon-mobile' },
-    { text: 'workplace.contentPutIn', icon: 'icon-fire' },
+    { text: 'workplace.datasetManagement', icon: 'icon-storage', route: '/dataset/index' },
+    { text: 'workplace.modelManagement', icon: 'icon-robot', route: '/model/index' },
+    { text: 'workplace.predictionTasks', icon: 'icon-trend-chart', route: '/prediction/index' },
+    { text: 'workplace.dataVisualization', icon: 'icon-apps', route: '/visualization/data-analysis' },
+    { text: 'workplace.userCenter', icon: 'icon-user', route: '/user/info' },
   ];
+
+  const handleClick = (route: string) => {
+    if (route) {
+      router.push(route);
+    }
+  };
 </script>
 
 <style scoped lang="less"></style>
